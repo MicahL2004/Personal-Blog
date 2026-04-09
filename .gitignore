@@ -1,0 +1,26 @@
+# Maven build output
+target/
+
+# IDE files
+.idea/
+*.iml
+.eclipse/
+.classpath
+.project
+.settings/
+*.iws
+*.ipr
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Environment
+.env
+*.env
+
+# Log files
+*.log
+logs/
