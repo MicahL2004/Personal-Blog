@@ -16,10 +16,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Handles the home page (/) – lists all blog posts.
+ * Handles the home page – lists all blog posts.
  * Also supports a ?q= query parameter for searching posts.
  */
-@WebServlet(urlPatterns = {"", "/"})
+@WebServlet(urlPatterns = {"/home"})
 public class HomeServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(HomeServlet.class.getName());
