@@ -3,9 +3,12 @@
 
 <!-- ===== Footer ===== -->
 <footer class="footer">
-    <p>&copy; 2024 My Personal Blog &mdash; Built with Java Servlets &amp; JSP</p>
+    <div class="container footer-content">
+        <p>&copy; 2026 My Personal Blog</p>
+        <p class="footer-tagline">Thoughtful writing, clean design, and classic Java on Azure.</p>
+    </div>
 </footer>
 
-<script src="${pageContext.request.contextPath}/js/app.js"></script>
+<script src="${pageContext.request.contextPath}/js/app.js?v=20260409"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@ public class BlogPostDAO {
     // SQL statements
     private static final String SQL_INSERT =
             "INSERT INTO blog_posts (title, content, author, created_at, updated_at) " +
-            "VALUES (?, ?, ?, NOW(), NOW())";
+            "VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
     private static final String SQL_SELECT_ALL =
             "SELECT id, title, content, author, created_at, updated_at " +
@@ -32,7 +32,7 @@ public class BlogPostDAO {
             "FROM blog_posts WHERE id = ?";
 
     private static final String SQL_UPDATE =
-            "UPDATE blog_posts SET title = ?, content = ?, author = ?, updated_at = NOW() " +
+            "UPDATE blog_posts SET title = ?, content = ?, author = ?, updated_at = CURRENT_TIMESTAMP " +
             "WHERE id = ?";
 
     private static final String SQL_DELETE =

@@ -2,6 +2,7 @@ package com.blog.servlet;
 
 import com.blog.dao.BlogPostDAO;
 import com.blog.model.BlogPost;
+import com.blog.util.DatabaseErrorUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -53,7 +54,7 @@ public class ViewPostServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/view.jsp").forward(req, resp);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error fetching post id=" + id, e);
-            req.setAttribute("errorMessage", "Unable to load post. Please try again later.");
+            req.setAttribute("errorMessage", DatabaseErrorUtil.toUserMessage(e));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }

@@ -1,6 +1,7 @@
 package com.blog.servlet;
 
 import com.blog.dao.BlogPostDAO;
+import com.blog.util.DatabaseErrorUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -67,7 +68,7 @@ public class DeletePostServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error deleting post id=" + id, e);
-            session.setAttribute("flashMessage", "Failed to delete post. Please try again.");
+            session.setAttribute("flashMessage", DatabaseErrorUtil.toUserMessage(e));
             session.setAttribute("flashType",    "error");
         }
 

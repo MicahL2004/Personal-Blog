@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
 
 <c:set var="pageTitle" value="${post.title}"/>
+<c:set var="navPage" value="home"/>
 <%@ include file="header.jsp" %>
 
 <article class="post-full">

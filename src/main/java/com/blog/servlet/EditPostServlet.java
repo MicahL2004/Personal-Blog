@@ -2,6 +2,7 @@ package com.blog.servlet;
 
 import com.blog.dao.BlogPostDAO;
 import com.blog.model.BlogPost;
+import com.blog.util.DatabaseErrorUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,7 +43,7 @@ public class EditPostServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(req, resp);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error loading post id=" + id + " for edit", e);
-            req.setAttribute("errorMessage", "Unable to load post. Please try again.");
+            req.setAttribute("errorMessage", DatabaseErrorUtil.toUserMessage(e));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }
@@ -95,7 +96,7 @@ public class EditPostServlet extends HttpServlet {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error updating post id=" + id, e);
             refillForm(req, id, title, content, author,
-                    "A database error occurred. Please try again.");
+                    DatabaseErrorUtil.toUserMessage(e));
             req.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(req, resp);
         }
     }

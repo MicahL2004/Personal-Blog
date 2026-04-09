@@ -2,15 +2,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="pageTitle" value="Edit Post"/>
+<c:set var="navPage" value="create"/>
 <%@ include file="header.jsp" %>
 
 <div class="page-header">
+    <span class="eyebrow">Editing</span>
     <h1>&#9998; Edit Post</h1>
-    <p>Update your post details below.</p>
+    <p>Refine your post and publish the updated version with confidence.</p>
 </div>
 
 <c:if test="${not empty errorMessage}">
-    <div class="error-box">&#9888; <c:out value="${errorMessage}"/></div>
+    <div class="error-box">
+        <strong>We couldn't save your changes.</strong>
+        <div><c:out value="${errorMessage}"/></div>
+    </div>
 </c:if>
 
 <div class="form-card">

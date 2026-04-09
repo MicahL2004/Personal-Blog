@@ -4,27 +4,32 @@
 <%@ taglib prefix="fn"  uri="http://java.sun.com/jsp/jstl/functions"  %>
 
 <c:set var="pageTitle" value="Home"/>
+<c:set var="navPage" value="home"/>
 <%@ include file="header.jsp" %>
 
 <!-- Page header -->
-<div class="page-header">
-    <h1>
-        <c:choose>
-            <c:when test="${not empty searchKeyword}">
-                Search results for: &ldquo;<c:out value="${searchKeyword}"/>&rdquo;
-            </c:when>
-            <c:otherwise>Latest Posts</c:otherwise>
-        </c:choose>
-    </h1>
-    <p>
-        <c:choose>
-            <c:when test="${not empty searchKeyword}">
-                Found <strong>${fn:length(posts)}</strong> post(s).
-                <a href="${pageContext.request.contextPath}/">Clear search</a>
-            </c:when>
-            <c:otherwise>Welcome to my personal blog. Thoughts, stories, and ideas.</c:otherwise>
-        </c:choose>
-    </p>
+<div class="page-header page-header-hero">
+    <div>
+        <span class="eyebrow">Personal Blog</span>
+        <h1>
+            <c:choose>
+                <c:when test="${not empty searchKeyword}">
+                    Search results for: &ldquo;<c:out value="${searchKeyword}"/>&rdquo;
+                </c:when>
+                <c:otherwise>Thoughts, stories, and ideas worth sharing.</c:otherwise>
+            </c:choose>
+        </h1>
+        <p>
+            <c:choose>
+                <c:when test="${not empty searchKeyword}">
+                    Found <strong>${fn:length(posts)}</strong> post(s).
+                    <a href="${pageContext.request.contextPath}/">Clear search</a>
+                </c:when>
+                <c:otherwise>A clean space for publishing updates, reflections, and creative work.</c:otherwise>
+            </c:choose>
+        </p>
+    </div>
+    <a href="${pageContext.request.contextPath}/create" class="btn btn-primary">&#43; Write a Post</a>
 </div>
 
 <!-- Error banner (DB unreachable, etc.) -->
@@ -37,7 +42,8 @@
     <c:when test="${empty posts}">
         <div class="empty-state">
             <h2>No posts yet</h2>
-            <p>Be the first to <a href="${pageContext.request.contextPath}/create">create a post</a>!</p>
+            <p>Publish your first post to start building your blog archive.</p>
+            <p><a href="${pageContext.request.contextPath}/create" class="btn btn-primary">Create your first post</a></p>
         </div>
     </c:when>
     <c:otherwise>

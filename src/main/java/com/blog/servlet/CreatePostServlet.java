@@ -2,6 +2,7 @@ package com.blog.servlet;
 
 import com.blog.dao.BlogPostDAO;
 import com.blog.model.BlogPost;
+import com.blog.util.DatabaseErrorUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -77,7 +78,7 @@ public class CreatePostServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error creating post", e);
-            req.setAttribute("errorMessage", "A database error occurred. Please try again.");
+            req.setAttribute("errorMessage", DatabaseErrorUtil.toUserMessage(e));
             req.setAttribute("title",   title);
             req.setAttribute("content", content);
             req.setAttribute("author",  author);

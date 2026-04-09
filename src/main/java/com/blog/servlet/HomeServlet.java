@@ -2,6 +2,7 @@ package com.blog.servlet;
 
 import com.blog.dao.BlogPostDAO;
 import com.blog.model.BlogPost;
+import com.blog.util.DatabaseErrorUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +41,7 @@ public class HomeServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error fetching posts", e);
-            req.setAttribute("errorMessage", "Unable to load posts. Please try again later.");
+            req.setAttribute("errorMessage", DatabaseErrorUtil.toUserMessage(e));
             posts = java.util.Collections.emptyList();
         }
 

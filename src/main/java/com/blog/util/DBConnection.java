@@ -33,6 +33,7 @@ public class DBConnection {
     private static final String DB_USER     = getEnv("DB_USER", "root");
     private static final String DB_PASSWORD = getEnv("DB_PASSWORD", "");
     private static final String DB_DRIVER   = getEnv("DB_DRIVER", "com.mysql.cj.jdbc.Driver");
+    private static final String DB_KIND     = getEnv("DB_KIND", "").trim().toLowerCase();
 
     // Allow a full URL override (useful for Azure SQL connection strings)
     private static final String DB_URL_OVERRIDE = System.getenv("DB_URL");
@@ -40,19 +41,19 @@ public class DBConnection {
     private static final String JDBC_URL;
 
     static {
-        if (DB_URL_OVERRIDE != null && !DB_URL_OVERRIDE.isEmpty()) {
-            JDBC_URL = DB_URL_OVERRIDE;
-        } else {
-            JDBC_URL = "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME
-                    + "?useSSL=true&requireSSL=false&serverTimezone=UTC"
-                    + "&allowPublicKeyRetrieval=true";
+        JDBC_URL = buildJdbcUrl();
+
+        if ("localhost".equalsIgnoreCase(DB_HOST) && (DB_URL_OVERRIDE == null || DB_URL_OVERRIDE.isBlank())) {
+            LOGGER.warning("Using default local database settings. Configure DB_HOST, DB_NAME, DB_USER and DB_PASSWORD in Azure App Service for production.");
         }
+
+        LOGGER.log(Level.INFO, "Using database URL: {0}", sanitizeJdbcUrl(JDBC_URL));
 
         // Load the JDBC driver class
         try {
-            Class.forName(DB_DRIVER);
+            Class.forName(resolveDriverClass());
         } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "JDBC driver not found: " + DB_DRIVER, e);
+            LOGGER.log(Level.SEVERE, "JDBC driver not found: " + resolveDriverClass(), e);
             throw new ExceptionInInitializerError(e);
         }
     }
@@ -66,6 +67,44 @@ public class DBConnection {
      */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+    }
+
+    private static String buildJdbcUrl() {
+        if (DB_URL_OVERRIDE != null && !DB_URL_OVERRIDE.isBlank()) {
+            return DB_URL_OVERRIDE.trim();
+        }
+
+        if (looksLikeSqlServer()) {
+            return "jdbc:sqlserver://" + DB_HOST + ":" + DB_PORT
+                    + ";databaseName=" + DB_NAME
+                    + ";encrypt=true;trustServerCertificate=false;loginTimeout=30;";
+        }
+
+        String sslMode = isAzureMySqlHost(DB_HOST) ? "REQUIRED" : "PREFERRED";
+        return "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME
+                + "?sslMode=" + sslMode
+                + "&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8";
+    }
+
+    private static String resolveDriverClass() {
+        if (looksLikeSqlServer()) {
+            return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        }
+        return DB_DRIVER;
+    }
+
+    private static boolean looksLikeSqlServer() {
+        return "sqlserver".equals(DB_KIND)
+                || DB_DRIVER.toLowerCase().contains("sqlserver")
+                || DB_HOST.toLowerCase().contains("database.windows.net");
+    }
+
+    private static boolean isAzureMySqlHost(String host) {
+        return host != null && host.toLowerCase().contains("mysql.database.azure.com");
+    }
+
+    private static String sanitizeJdbcUrl(String jdbcUrl) {
+        return jdbcUrl == null ? "" : jdbcUrl.replaceAll("(?i)(password=)[^;&]+", "$1****");
     }
 
     /**
