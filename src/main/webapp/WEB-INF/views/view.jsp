@@ -32,7 +32,8 @@
         <form method="post"
               action="${pageContext.request.contextPath}/delete"
               style="display:inline"
-              onsubmit="return confirmDelete('<c:out value="${post.title}" escapeXml="false"/>'.replace(/'/g, '\\\''))">
+              data-title="<c:out value='${post.title}'/>"
+              onsubmit="return confirmDelete(this.dataset.title)">
             <input type="hidden" name="id" value="${post.id}">
             <button type="submit" class="btn btn-danger">&#128465; Delete Post</button>
         </form>
