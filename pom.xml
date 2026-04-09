@@ -42,11 +42,11 @@
             <version>1.2</version>
         </dependency>
 
-        <!-- MySQL JDBC Driver -->
+        <!-- MySQL JDBC Driver (com.mysql:mysql-connector-j replaces the deprecated mysql:mysql-connector-java) -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.1.0</version>
         </dependency>
 
         <!-- Microsoft JDBC Driver for Azure SQL Database -->
