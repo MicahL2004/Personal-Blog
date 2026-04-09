@@ -1,60 +1,53 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Java app to Azure Web App - MicahLindseyPersonalBlog
+name: Build and deploy WAR app to Azure Web App - MicahLindseyPersonalBlog
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
-      contents: read
+      contents: read #This is required for actions/checkout
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Java 11
+      - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
           java-version: '11'
-          cache: maven
+          distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn -B clean package --file pom.xml
+        run: mvn clean install
 
-      - name: Upload WAR artifact for deployment
+      - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: target/*.war
+          path: '${{ github.workspace }}/target/*.war'
 
   deploy:
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
-          path: downloaded-artifact
-
+      
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'MicahLindseyPersonalBlog'
           slot-name: 'Production'
-          package: 'downloaded-artifact/personal-blog.war'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8B7D8CBEB283480CAF51F0D73B4D148F }}
+          package: '*.war'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9A3B4C95739F4C76955CD0010A4B375C }}
