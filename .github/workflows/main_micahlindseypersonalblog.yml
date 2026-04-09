@@ -42,12 +42,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: java-app
+          path: downloaded-artifact
       
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'MicahLindseyPersonalBlog'
-          slot-name: 'Production'
-          package: '*.war'
+          package: 'downloaded-artifact/*.war'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9A3B4C95739F4C76955CD0010A4B375C }}
